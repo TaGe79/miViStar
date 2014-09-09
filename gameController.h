@@ -5,6 +5,7 @@
 #include "star.h"
 #include "componist.h"
 #include "energyIndicator.h"
+#include "ledController.h"
 
 #define MAX_STARS_IN_GAME   20
 #define MAX_LEVELS          10
@@ -28,8 +29,9 @@ typedef enum GAME_STATES {
 class GameController {
   private:
     Componist *componist;
+    LEDController *ledController;
     EnergyIndicator *energyIndicator;
-    
+
     uint8_t currentLevel;
     uint8_t currentGroundings;
     uint8_t currentCatches;
@@ -37,7 +39,7 @@ class GameController {
     uint8_t currentGameSpeed;
     uint8_t currentLives;
     
-    uint8_t maxStarsInGame[MAX_LEVELS] = {4,4,5,6,7,8,10,12,12,15};
+    static const uint8_t maxStarsInGame[MAX_LEVELS];
     
     Sprite *man;
     Star *stars[MAX_STARS_IN_GAME];
@@ -56,7 +58,9 @@ class GameController {
     GameController();
     ~GameController();
 
-    void setComponist(Componist *componist);
+    GameController* setComponist(Componist *componist);
+    GameController* setLEDController(LEDController *ledController);
+    
     void executeInLoop();
     void moveTheManTo(pos_t pos);
     uint8_t getCurrentLevel();

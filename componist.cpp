@@ -36,6 +36,10 @@ static int frequency(char note)
 	// but we still need to return a value, so return 0.
 }
 
+Componist::Componist(const int _buzzerPin) : buzzerPin(_buzzerPin) {
+      pinMode(buzzerPin, OUTPUT);
+}
+    
 void Componist::playMelody(const unsigned int tempo, const char *notes, const int *beats) {
   int songLength = strlen(notes);  
   int duration = 0;
