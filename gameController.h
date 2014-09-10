@@ -6,6 +6,8 @@
 #include "componist.h"
 #include "energyIndicator.h"
 #include "ledController.h"
+#include "userInputReceiver.h"
+#include "userInputController.h"
 
 #define MAX_STARS_IN_GAME   20
 #define MAX_LEVELS          10
@@ -26,11 +28,12 @@ typedef enum GAME_STATES {
   GAME_OVER  
 } gameStates_t;
 
-class GameController {
+class GameController : public UserInputReceiver {
   private:
     Componist *componist;
     LEDController *ledController;
     EnergyIndicator *energyIndicator;
+    UserInputController *inputController;
 
     uint8_t currentLevel;
     uint8_t currentGroundings;
@@ -60,10 +63,16 @@ class GameController {
 
     GameController* setComponist(Componist *componist);
     GameController* setLEDController(LEDController *ledController);
+    GameController* setUserInputController(UserInputController *userInputController);
+    
+    void initialize();
     
     void executeInLoop();
     void moveTheManTo(pos_t pos);
     uint8_t getCurrentLevel();
+    
+    void userInputDetected(void* sender, Inputs userInput);
+    void moveCarretTo(void* sender, int posX, int posY);    
 };
 
 #endif

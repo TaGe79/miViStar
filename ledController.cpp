@@ -1,6 +1,6 @@
 #include "ledController.h"
 
-LEDController::LEDController(int *ledPins, uint8_t numberOfLeds) {
+LEDController::LEDController(const int *ledPins, uint8_t numberOfLeds) {
   this->ledPins = ledPins;
   this->numberOfLeds = numberOfLeds;
   

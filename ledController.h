@@ -5,11 +5,11 @@
 
 class LEDController {
   private:
-    int *ledPins; 
+    const int *ledPins; 
     int numberOfLeds;
     
   public:
-    LEDController(int *ledPins, uint8_t numberOfLeds);
+    LEDController(const int *ledPins, uint8_t numberOfLeds);
     
     void turnLEDOn(uint8_t idx);  
     void turnLEDOff(uint8_t idx);

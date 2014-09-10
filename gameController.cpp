@@ -118,6 +118,19 @@ GameController::~GameController() {
   
   if ( componist ) delete componist;
   if ( ledController ) delete ledController;
+  
+  delete inputController;
+}
+
+void GameController::initialize() {
+  srand (9868136);
+    
+  inputController->setFixPositionY(GROUND);
+  inputController->setMinPositionX(LEFT_MARGIN);
+  inputController->setMaxPositionX(RIGHT_MARGIN);
+  
+  uView.begin();					// start MicroView	
+  uView.clear(PAGE);			        	// clear page  
 }
 
 void GameController::displayLevelNumber() {
@@ -134,6 +147,11 @@ void GameController::executeInLoop() {
   
   starsLastMoved += DELAY;
   starLastStarted += DELAY;
+  
+  uView.display();
+  
+  delay(DELAY);
+  
 }
 
 void GameController::moveTheManTo(pos_t pos) {
@@ -151,3 +169,18 @@ GameController* GameController::setLEDController(LEDController *ledController) {
   
   return this;
 }
+
+GameController* GameController::setUserInputController(UserInputController *userInputController) {
+   this->inputController = userInputController;
+  
+  return this; 
+}
+
+void GameController::userInputDetected(void* sender, Inputs userInput) {
+  
+}
+
+void GameController::moveCarretTo(void* sender, int posX, int posY) {
+  moveTheManTo(pos_t(posX,posY));
+}
+
