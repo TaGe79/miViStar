@@ -8,7 +8,7 @@
 
 #define SAMPLE_CNT         10
 #define MAX_SENSOR_VALUE   1000.0
-#define SENSOR_PRECISION   5
+#define SENSOR_PRECISION   4
 
 class SpmInputController : public UserInputController {
   private:

@@ -13,9 +13,10 @@ SpmInputController::~SpmInputController() {
 
 void SpmInputController::processUserInputs() {
   const int sensorValue = analogRead(pin);
-  if ( abs(lastSensorValue -sensorValue ) < SENSOR_PRECISION ) return;
+  if ( abs(lastSensorValue -sensorValue ) <= SENSOR_PRECISION ) return;
   
-  const int posX = floor(minPosX+min(maxPosX,(minPosX/MAX_SENSOR_VALUE)*sensorValue));
+  lastSensorValue = sensorValue;
+  const int posX = floor(minPosX + min(maxPosX,(maxPosX/MAX_SENSOR_VALUE)*sensorValue));
  
   inputReceiver->moveCarretTo(this, posX,fixPosY);    
 }

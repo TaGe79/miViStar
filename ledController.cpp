@@ -33,7 +33,7 @@ void LEDController::play(const uint8_t tempo, const int8_t *leds, const uint8_t 
   int i = 0;  
   while( (l = leds[i++]) != -99 ) {
     const uint8_t _delay = beats[i]*tempo;
-    if ( l ) turnLED((uint8_t)abs(l-1), l>0);
+    if ( l ) turnLED((uint8_t)abs(l)-1, l>0);
     if ( _delay ) delay(_delay);
   }
 }

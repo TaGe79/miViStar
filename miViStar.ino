@@ -35,5 +35,6 @@ void loop () {
   
   spmInputCtrl->processUserInputs();
   gameController->executeInLoop();  
-
+  
+  delay(0);
 }
