@@ -1,6 +1,7 @@
 #ifndef USER_INPUT_TYPES_H
 #define USER_INPUT_TYPES_H
 typedef enum Inputs {
+  NONE,
   LEFT,
   RIGHT,
   UP,

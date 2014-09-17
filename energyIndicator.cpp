@@ -3,6 +3,11 @@
 static const uint8_t width = 2;
 static const uint8_t height = 30;
 
+void EnergyIndicator::redraw() {
+  draw();
+  drawFace();  
+}
+
 void EnergyIndicator::drawFace() {
   uint8_t offsetX, offsetY, dw = width, dh = height;
   offsetX=getX();

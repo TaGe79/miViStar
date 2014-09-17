@@ -8,11 +8,11 @@ static const int      groundTempo         = 150;
 static const char     groundNotes[]       = "hfdc";
 static const int      groundBeats[]       = {2,2,2,2};
 
-static const uint8_t  catchLightsTempo    = 60;
+static const uint8_t  catchLightsTempo    = 50;
 static const int8_t   catchLights[]       = {1, 2, 3,-3,-2,-1,-99};
-static const uint8_t  catchLightsBeats[]  = {1, 1, 1, 1, 1, 1, 0};
+static const uint8_t  catchLightsBeats[]  = {1, 1, 2, 0, 0, 0, 0};
 
-static const uint8_t  groundLightsTempo   = 100;
+static const uint8_t  groundLightsTempo   = 50;
 static const int8_t   groundLights[]      = {1, 2, 3, 0, -3,-2,-1,-99};
 static const uint8_t  groundLightsBeats[] = {0, 0, 0, 3, 0,  0, 0, 0};
 
@@ -85,7 +85,19 @@ void GameController::moveTheStars() {
     starsInGame--;
     
     // and update the energy bar
-    energyIndicator->setValue(START_ENERGY_VALUE+(currentCatches*2)-(currentGroundings*2));    
+    int energyLevel = max(0, min( MAX_ENERGY, START_ENERGY_VALUE+(currentCatches*2)-(currentGroundings*2) ) );
+    
+    if ( energyLevel == MAX_ENERGY ) {
+      // TODO step a level higher
+      // TODO reset energy level
+      
+    } else if ( energyLevel == 0 ) {
+      // TODO decrease lives by one
+      // TODO test lives and finish game if the 0
+      // TODO reset energy level  
+    }
+    
+    energyIndicator->setValue(energyLevel);           
   }
   
   starsLastMoved = 0;  
@@ -100,16 +112,16 @@ GameController::GameController() :
   starsLastMoved(0),
   starLastStarted(0),
   starGenSpeed(BASE_GAME_SPEED),
-  currentGameSpeed(BASE_GAME_SPEED) {
+  currentGameSpeed(BASE_GAME_SPEED),
+  currentGameState(GAME_INTRO),
+  lastInputDetected(NONE) {
   man = new Sprite(4,(uint8_t*)Sprite::man);
   memset(stars,0,MAX_STARS_IN_GAME*sizeof(Star*));  
 
   componist = NULL;
   ledController = NULL;
   
-  //energyIndicator = new EnergyIndicator(HORIZONTAL,2,GROUND+3,100);
-  energyIndicator = new EnergyIndicator(VERTICAL,LEFT_MARGIN+RIGHT_MARGIN+2,SKY+5,100);
-  energyIndicator->setValue(START_ENERGY_VALUE);
+  energyIndicator = new EnergyIndicator(VERTICAL,LEFT_MARGIN+RIGHT_MARGIN+2,SKY+5,MAX_ENERGY);  
 }
 
 GameController::~GameController() {
@@ -130,7 +142,7 @@ void GameController::initialize() {
   inputController->setMaxPositionX(RIGHT_MARGIN);
   
   uView.begin();					// start MicroView	
-  uView.clear(PAGE);			        	// clear page  
+  uView.clear(PAGE);  			        	// clear page  
 }
 
 void GameController::displayLevelNumber() {
@@ -142,8 +154,42 @@ void GameController::displayLevelNumber() {
 }
 
 void GameController::executeInLoop() {
-  moveTheStars();
-  generateAStar();  
+  
+  switch ( currentGameState ) {
+    case GAME_INTRO:
+      uView.setCursor(0,0); 
+      uView.print('I');
+      break;
+    
+    case LEVEL_SELECTION:
+      uView.setCursor(0,0);
+      uView.print('L');
+      break;
+    
+    case ACTIVE_GAME:
+  
+      moveTheStars();
+      generateAStar();  
+  
+      break;
+
+    case LEVEL_FINISHED:
+      uView.setCursor(0,0); 
+      uView.print('F');    
+      break;
+      
+    case GAME_OVER:
+      uView.setCursor(0,0); 
+      uView.print('G');        
+      break;
+      
+    default:
+      uView.setCursor(0,0); 
+      uView.print((char)('A'+currentGameState));        
+      break;
+  }
+  
+  actualizeGameState();
   
   starsLastMoved += DELAY;
   starLastStarted += DELAY;
@@ -151,6 +197,40 @@ void GameController::executeInLoop() {
   uView.display();
   
   delay(DELAY);
+}
+
+void GameController::actualizeGameState() {
+  const GameStates lastState = currentGameState;
+  
+  // TODO evaluate and advance game state
+  switch ( currentGameState ) {
+    case GAME_INTRO:
+      if ( inStateTimeMs < INTRO_SCREEN_DISP_TIME ) break;
+      
+      uView.clear(PAGE);
+      currentGameState = LEVEL_SELECTION;
+      break;
+    case LEVEL_SELECTION:
+      //if (lastInputDetected == ENTER ) 
+        uView.clear(PAGE);
+        currentGameState = ACTIVE_GAME;
+        energyIndicator->redraw();
+      break;
+    case ACTIVE_GAME:
+      break;
+    case LEVEL_FINISHED:
+      currentGameState = ACTIVE_GAME;
+      break;
+      
+    case GAME_OVER:
+      break;
+    default:
+      currentGameState = GAME_INTRO;
+      break;    
+  }
+  
+  if ( lastState != currentGameState ) inStateTimeMs = 0;
+  else inStateTimeMs += DELAY;
 }
 
 void GameController::moveTheManTo(pos_t pos) {

@@ -17,14 +17,20 @@
 #define FALLING_PIXELS      1
 #define GROUND              40
 #define SKY                 6
+
 #define START_ENERGY_VALUE  30
+#define MAX_ENERGY          100
+
+#define INTRO_SCREEN_DISP_TIME 2000
 
 #define LEFT_MARGIN         4
 #define RIGHT_MARGIN        52
 
-typedef enum GAME_STATES {
+typedef enum GameStates {
+  GAME_INTRO,
   LEVEL_SELECTION,
   ACTIVE_GAME,
+  LEVEL_FINISHED,
   GAME_OVER  
 } gameStates_t;
 
@@ -42,6 +48,11 @@ class GameController : public UserInputReceiver {
     uint8_t currentGameSpeed;
     uint8_t currentLives;
     
+    GameStates currentGameState;
+    
+    uint16_t  inStateTimeMs;
+    Inputs lastInputDetected;
+    
     static const uint8_t maxStarsInGame[MAX_LEVELS];
     
     Sprite *man;
@@ -56,6 +67,8 @@ class GameController : public UserInputReceiver {
     pos_t generateNonCollidingX();
     void generateAStar();
     void moveTheStars();
+    
+    void actualizeGameState();
     
   public:
     GameController();

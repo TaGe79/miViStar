@@ -20,6 +20,8 @@ class EnergyIndicator : public MicroViewWidget {
     
     void draw();
     void drawFace();
+    
+    void redraw();
 };
 
 #endif
