@@ -7,11 +7,8 @@
 #include "ledController.h"
 #include "spmInputController.h"
 
-uint8_t controllerPos = 0;
 const int sensorPin         = A0;
-
 const int buzzerPin         = A1;
-
 const int ledPins[]         = {A2,A3,A4};
 
 
@@ -24,17 +21,14 @@ void setup() {
     ->setLEDController(new LEDController(ledPins,3));
     
   spmInputCtrl = new SpmInputController(sensorPin, gameController);
-  
+ 
   gameController->setUserInputController( spmInputCtrl );
   
   gameController->initialize();
 }
 
 
-void loop () {
-  
+void loop () {  
   spmInputCtrl->processUserInputs();
   gameController->executeInLoop();  
-  
-  delay(0);
 }

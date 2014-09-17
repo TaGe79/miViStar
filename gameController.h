@@ -19,9 +19,9 @@
 #define SKY                 6
 
 #define START_ENERGY_VALUE  30
-#define MAX_ENERGY          100
+#define MAX_ENERGY          50
 
-#define INTRO_SCREEN_DISP_TIME 2000
+#define INTRO_SCREEN_DISP_TIME 4000
 
 #define LEFT_MARGIN         4
 #define RIGHT_MARGIN        52
@@ -31,6 +31,7 @@ typedef enum GameStates {
   LEVEL_SELECTION,
   ACTIVE_GAME,
   LEVEL_FINISHED,
+  LIFE_LOST,
   GAME_OVER  
 } gameStates_t;
 
@@ -47,6 +48,7 @@ class GameController : public UserInputReceiver {
     
     uint8_t currentGameSpeed;
     uint8_t currentLives;
+    uint8_t currentEnergyLevel;
     
     GameStates currentGameState;
     
@@ -69,6 +71,8 @@ class GameController : public UserInputReceiver {
     void moveTheStars();
     
     void actualizeGameState();
+    
+    void finishAndStepToNextLevel();
     
   public:
     GameController();

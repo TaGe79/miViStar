@@ -43,7 +43,7 @@ pos_t GameController::generateNonCollidingX() {
 void GameController::generateAStar() {
   if ( starsInGame >= maxStarsInGame[currentLevel] || rand() % 10 < 5 || starLastStarted < starGenSpeed ) return;
   
-  Star *s = new Star(Sprite::SIZE,Sprite::star,GROUND);
+  Star *s = new Star(Sprite::STAR_SIZE,Sprite::star,GROUND);
   s->draw(generateNonCollidingX());
   
   for ( int i=0; i < MAX_STARS_IN_GAME; i++ ) {
@@ -85,19 +85,8 @@ void GameController::moveTheStars() {
     starsInGame--;
     
     // and update the energy bar
-    int energyLevel = max(0, min( MAX_ENERGY, START_ENERGY_VALUE+(currentCatches*2)-(currentGroundings*2) ) );
-    
-    if ( energyLevel == MAX_ENERGY ) {
-      // TODO step a level higher
-      // TODO reset energy level
-      
-    } else if ( energyLevel == 0 ) {
-      // TODO decrease lives by one
-      // TODO test lives and finish game if the 0
-      // TODO reset energy level  
-    }
-    
-    energyIndicator->setValue(energyLevel);           
+    currentEnergyLevel = max(0, min( MAX_ENERGY, START_ENERGY_VALUE+(currentCatches*2)-(currentGroundings*2) ) );    
+    energyIndicator->setValue(currentEnergyLevel);           
   }
   
   starsLastMoved = 0;  
@@ -114,8 +103,9 @@ GameController::GameController() :
   starGenSpeed(BASE_GAME_SPEED),
   currentGameSpeed(BASE_GAME_SPEED),
   currentGameState(GAME_INTRO),
+  currentEnergyLevel(START_ENERGY_VALUE),
   lastInputDetected(NONE) {
-  man = new Sprite(4,(uint8_t*)Sprite::man);
+  man = new Sprite(Sprite::MAN_SIZE,(uint8_t*)Sprite::man,COMPRESSED);
   memset(stars,0,MAX_STARS_IN_GAME*sizeof(Star*));  
 
   componist = NULL;
@@ -153,12 +143,31 @@ void GameController::displayLevelNumber() {
   uView.print(lvl);
 }
 
+void GameController::finishAndStepToNextLevel() {
+      currentEnergyLevel = START_ENERGY_VALUE;
+      currentGroundings = 0;
+      currentCatches = 0;
+      currentLevel= min(currentLevel+1, MAX_LEVELS);
+      currentGameSpeed = BASE_GAME_SPEED - currentLevel*10; 
+      starsInGame = 0;  
+      for ( int i = 0; i < MAX_STARS_IN_GAME; i++ ) {
+        Star *s = stars[i];
+        if ( s == NULL ) continue;      
+        delete s;
+        stars[i] = NULL;
+      }
+}
+
 void GameController::executeInLoop() {
   
   switch ( currentGameState ) {
     case GAME_INTRO:
+      uView.setFontType(1); 
       uView.setCursor(0,0); 
-      uView.print('I');
+      uView.print(".ViS.");
+      uView.display();
+      delay(INTRO_SCREEN_DISP_TIME);
+      uView.clear(PAGE);
       break;
     
     case LEVEL_SELECTION:
@@ -170,15 +179,30 @@ void GameController::executeInLoop() {
   
       moveTheStars();
       generateAStar();  
-  
+    
       break;
-
-    case LEVEL_FINISHED:
-      uView.setCursor(0,0); 
-      uView.print('F');    
+    case LIFE_LOST:
+      currentLives -= 1;
       break;
       
+    case LEVEL_FINISHED: {
+      finishAndStepToNextLevel();  
+
+      // TODO play some victory music
+      // TODO introduce sprite animations!
+      Sprite victory(Sprite::VICTORY_SIZE, Sprite::victory, COMPRESSED);
+      uView.clear(PAGE);
+      victory.draw(pos_t(32,24));
+      uView.display();
+      delay(2000);
+      uView.clear(PAGE); 
+      energyIndicator->setValue(currentEnergyLevel);      
+      energyIndicator->redraw();    
+
+    } break;
+      
     case GAME_OVER:
+      uView.clear(PAGE);
       uView.setCursor(0,0); 
       uView.print('G');        
       break;
@@ -205,19 +229,28 @@ void GameController::actualizeGameState() {
   // TODO evaluate and advance game state
   switch ( currentGameState ) {
     case GAME_INTRO:
-      if ( inStateTimeMs < INTRO_SCREEN_DISP_TIME ) break;
-      
-      uView.clear(PAGE);
       currentGameState = LEVEL_SELECTION;
       break;
     case LEVEL_SELECTION:
       //if (lastInputDetected == ENTER ) 
         uView.clear(PAGE);
         currentGameState = ACTIVE_GAME;
+        energyIndicator->setValue(START_ENERGY_VALUE);        
         energyIndicator->redraw();
       break;
     case ACTIVE_GAME:
+      if ( currentEnergyLevel == MAX_ENERGY ) {
+        currentGameState = LEVEL_FINISHED;
+        
+      } else if ( currentEnergyLevel == 0 ) {
+        currentGameState = LIFE_LOST;
+      }
       break;
+    case LIFE_LOST:
+      if ( currentLives > 0 ) currentGameState = ACTIVE_GAME;
+      else currentGameState = GAME_OVER;
+      break;
+      
     case LEVEL_FINISHED:
       currentGameState = ACTIVE_GAME;
       break;
@@ -234,6 +267,8 @@ void GameController::actualizeGameState() {
 }
 
 void GameController::moveTheManTo(pos_t pos) {
+  if ( currentGameState != ACTIVE_GAME ) return;
+  
   man->draw(pos);
 }
 
@@ -259,7 +294,7 @@ void GameController::userInputDetected(void* sender, Inputs userInput) {
   
 }
 
-void GameController::moveCarretTo(void* sender, int posX, int posY) {
+void GameController::moveCarretTo(void* sender, int posX, int posY) { 
   moveTheManTo(pos_t(posX,posY));
 }
 

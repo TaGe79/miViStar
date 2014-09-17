@@ -1,6 +1,6 @@
 #include "star.h"
 
-Star::Star(uint8_t size, const uint8_t* sprite, uint8_t ground)  : Sprite(size,sprite) {
+Star::Star(uint8_t size, const uint8_t* sprite, uint8_t ground)  : Sprite(size,sprite, COMPRESSED) {
       this->ground = ground;
 }
     

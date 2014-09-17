@@ -3,6 +3,11 @@
 
 #include <MicroView.h>
 
+typedef enum spriteTypes {
+  PLAIN,
+  COMPRESSED
+} spriteType_t;
+
 typedef struct pos_t {
   pos_t(int _x, int _y) : x(_x), y(_y) { }
   
@@ -17,12 +22,13 @@ private:
 protected:
   uint8_t size;
   pos_t pos;
-
+  spriteTypes type;
+  
   void eraseCurrent();
   void draw(pos_t pos, uint8_t color);
   
 public:
-  Sprite(uint8_t size, const uint8_t *sprite);
+  Sprite(uint8_t size, const uint8_t *sprite, const spriteTypes type = PLAIN);
   ~Sprite();
   
   pos_t whereAmI();
@@ -33,7 +39,11 @@ public:
   
   static const uint8_t star[];
   static const uint8_t man[];
-  static const uint8_t SIZE;
+  static const uint8_t victory[];
+  
+  static const uint8_t MAN_SIZE;
+  static const uint8_t STAR_SIZE;
+  static const uint8_t VICTORY_SIZE;
 };
 
 #endif
