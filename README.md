@@ -1,5 +1,6 @@
 miViStar
 ========
+![miViStar boxed][pics/mivistar.png]
 
 This is a simple arcade style game for the MicroView Arduino chip.
 
@@ -16,12 +17,14 @@ and catch the ones with worthy minerals.
 
 # Hardware
 
-## MicroView Arduino Chip
+![the board][pics/board_01.jpg]
 
-## Soft potentiometer
+- MicroView Arduino Chip
 
-## Piezo buzzer
+- Soft potentiometer
 
-## LED
+- Piezo buzzer
 
-## Resistance
+- LED
+
+- Resistance
