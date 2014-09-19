@@ -20,7 +20,8 @@ private:
   const uint8_t *sprite;
 
 protected:
-  uint8_t size;
+  uint8_t width;
+  uint8_t height;
   pos_t pos;
   spriteTypes type;
   
@@ -29,6 +30,7 @@ protected:
   
 public:
   Sprite(uint8_t size, const uint8_t *sprite, const spriteTypes type = PLAIN);
+  Sprite(uint8_t width,uint8_t height, const uint8_t *sprite, const spriteTypes type = PLAIN);
   ~Sprite();
   
   pos_t whereAmI();
@@ -40,6 +42,7 @@ public:
   static const uint8_t star[];
   static const uint8_t man[];
   static const uint8_t victory[];
+  static const uint8_t vis[];
   
   static const uint8_t MAN_SIZE;
   static const uint8_t STAR_SIZE;

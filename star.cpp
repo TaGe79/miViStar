@@ -5,7 +5,7 @@ Star::Star(uint8_t size, const uint8_t* sprite, uint8_t ground)  : Sprite(size,s
 }
     
 bool Star::isGrounded() {
-  return ( pos.y+floor(size/2+0.5) >= ground );
+  return ( pos.y+floor(width/2+0.5) >= ground );
 }
 
 

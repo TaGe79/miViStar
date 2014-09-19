@@ -161,14 +161,15 @@ void GameController::finishAndStepToNextLevel() {
 void GameController::executeInLoop() {
   
   switch ( currentGameState ) {
-    case GAME_INTRO:
-      uView.setFontType(1); 
-      uView.setCursor(0,0); 
-      uView.print(".ViS.");
+    case GAME_INTRO: {
+      Sprite vis(40, 8, Sprite::vis, COMPRESSED);
+      uView.clear(PAGE);
+      vis.draw(pos_t(32,24));
+
       uView.display();
       delay(INTRO_SCREEN_DISP_TIME);
       uView.clear(PAGE);
-      break;
+    } break;
     
     case LEVEL_SELECTION:
       uView.setCursor(0,0);
