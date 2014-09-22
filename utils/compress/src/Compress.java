@@ -24,18 +24,26 @@ public class Compress {
 //            1,0,0,1,
 //            0,1,1,0
 
-            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,
-            1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,
-            1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1
+              0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,1,1,
+              0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,1,1,
+              0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,1,1,
+              0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,1,1,
+              0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,1,1,
+              0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,1,1,
+              0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,0,1,1
+
+//            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+//            0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,
+//            0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,
+//            0,0,0,0,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+//            0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,
+//            0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,
+//            1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,
+//            1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1
     };
 
-    private static int width = 40; //40; //4; //32;
-    private static int height = 8; //40; //4; //32;
+    private static int width = 20; //40; //40; //4; //32;
+    private static int height = 7; //40; //4; //32;
 
     private int[] jpgToByteArray() throws Exception {
         BufferedImage image = ImageIO.read(new File("/Users/tgergel/Documents/workspace/miViStar/pics/ViS.bmp"));
@@ -59,19 +67,39 @@ public class Compress {
     }
 
     private int[] compress(int[] sprite, int width, int height) {
-        final int codedLength = (width * height) / 8;
-        final int bytesPerRow = width > 8 ? width/8 + ((width%8 == 0)?0: (8 / (width%8))) + ( (width%8 == 0 || 8 % (width%8) != 0 )?1:0 ) : 0;
+        final int bytesPerRow = width > 8 ? width/8 + ((width%8 == 0) ? 0 : 1 ) : 0;
+        final int codedLength = (bytesPerRow * height);
         final int rowsPerByte = 8/width;
+        final boolean fill = width%8 != 0;
 
         int[] bytes = new int[codedLength];
 
         int currentByte = 0;
         int currentBit = 0;
-        for ( int i = 0; i < width*height ; i++ ) {
-            bytes[currentByte] = bytes[currentByte]+(sprite[i]<<(7-currentBit));
+        for ( int i = 1; i <= width*height ; i++ ) {
+          final int currentRowNum = (i / (width+1)) + 1;
+          final int lastBitInRow = currentRowNum * width - (width % 8);
+          boolean bevorLastBrokenByte = fill && ( i > (currentRowNum-1)*width || i == 0 ) && i < lastBitInRow;
+
+          bytes[currentByte] = bytes[currentByte] + (sprite[i - 1] << (7 - currentBit));
+
+          if ( bevorLastBrokenByte ) {
             currentBit += 1;
             currentBit %= 8;
-            if ( currentBit == 0 ) currentByte+=1;
+            if (currentBit == 0) currentByte += 1;
+          } else {
+            boolean startBrokenByte = i == lastBitInRow;
+            if ( startBrokenByte ) {
+              currentByte += 1;
+              currentBit = 0;
+            } else {
+              currentBit += 1;
+              if ( i == currentRowNum*width ) {
+                currentByte += 1;
+                currentBit = 0;
+              }
+            }
+          }
         }
 
         return bytes;
@@ -79,7 +107,7 @@ public class Compress {
 
     private int[] decompress(int[] bytes, int width, int height) {
         int wMacht = width % 8;
-        final int bytesPerRow = width > 8 ? width/8 + ((wMacht == 0)?0: (8 / wMacht)) + ( (wMacht != 0 && 8 % wMacht != 0 )?1:0 ) : 0;
+        final int bytesPerRow = width > 8 ? width/8 + ((width%8 == 0) ? 0 : 1 ) : 0;
         final int rowsPerByte = 8/width;
 
         final int[] sprite = new int[width*height];
@@ -115,6 +143,13 @@ public class Compress {
         System.out.println("Compressed ("+bytes.length+"): "+sb.toString());
         int[] testSprite = decompress(bytes, width, height);
 
-        Assert.assertArrayEquals(sprite,testSprite);
+      final StringBuffer cp = new StringBuffer();
+      for ( int i=0; i < testSprite.length; i++ ) {
+        cp.append(testSprite[i]+",");
+        if ( i % width == width -1 ) cp.append("\n");
+      }
+      System.out.println("Decompressed:\n"+cp.toString());
+
+      Assert.assertArrayEquals(sprite,testSprite);
     }
 }
