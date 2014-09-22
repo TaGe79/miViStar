@@ -70,8 +70,7 @@ void Sprite::draw(pos_t pos, uint8_t color) {
   const uint8_t sizeHalfY = height/2;
   uint8_t zx = pos.x-sizeHalfX;
   uint8_t zy = pos.y-sizeHalfY;
-  uint8_t wMacht = width%8;
-  uint8_t bytesPerRow = width > 8 ? width/8 + ((wMacht == 0)?0: (8 / wMacht)) + ( (wMacht != 0 && 8 % wMacht != 0 )?1:0 ) : 0;
+  uint8_t bytesPerRow = width > 8 ? width / 8 + ((width % 8 == 0) ? 0 : 1) : 0;
   uint8_t rowsPerByte = 8/width;
   for ( uint8_t y =0; y<height; y++ ) {
     int cy = zy+y;    
