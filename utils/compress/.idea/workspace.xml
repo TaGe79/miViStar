@@ -87,7 +87,7 @@
       <file leaf-file-name="Compress.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Compress.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="64" column="75" selection-start="2473" selection-end="2473" vertical-scroll-proportion="0.6300246">
+            <state line="63" column="75" selection-start="2564" selection-end="2564" vertical-scroll-proportion="0.6201805">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -492,10 +492,6 @@
       </breakpoints-dialog>
     </breakpoint-manager>
   </component>
-  <component name="antWorkspaceConfiguration">
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
-    <option name="FILTER_TARGETS" value="false" />
-  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Compress.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -527,7 +523,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Compress.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="75" selection-start="2473" selection-end="2473" vertical-scroll-proportion="0.6300246">
+        <state line="63" column="75" selection-start="2564" selection-end="2564" vertical-scroll-proportion="0.6201805">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
