@@ -43,6 +43,7 @@ public:
   static const uint8_t man[];
   static const uint8_t victory[];
   static const uint8_t vis[];
+  static const uint8_t death[];
   
   static const uint8_t MAN_SIZE;
   static const uint8_t STAR_SIZE;

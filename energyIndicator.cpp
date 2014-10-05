@@ -20,7 +20,7 @@ void EnergyIndicator::drawFace() {
     dh = width;
     dw = height;  
   }
-
+  uView.drawChar(offsetX, offsetY-8, 'E');
   uView.lineH(offsetX,offsetY,dw);
   uView.lineH(offsetX,offsetY+dh,dw);
 

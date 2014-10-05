@@ -105,13 +105,15 @@ GameController::GameController() :
   currentGameState(GAME_INTRO),
   currentEnergyLevel(START_ENERGY_VALUE),
   lastInputDetected(NONE) {
-  man = new Sprite(Sprite::MAN_SIZE,(uint8_t*)Sprite::man,COMPRESSED);
-  memset(stars,0,MAX_STARS_IN_GAME*sizeof(Star*));  
-
-  componist = NULL;
-  ledController = NULL;
   
-  energyIndicator = new EnergyIndicator(VERTICAL,LEFT_MARGIN+RIGHT_MARGIN+2,SKY+5,MAX_ENERGY);  
+    man = new Sprite(Sprite::MAN_SIZE,(uint8_t*)Sprite::man,COMPRESSED);
+    memset(stars,0,MAX_STARS_IN_GAME*sizeof(Star*));  
+
+    componist = NULL;
+    ledController = NULL;
+  
+    energyIndicator = new EnergyIndicator(VERTICAL,LEFT_MARGIN+RIGHT_MARGIN+2,SKY+5,MAX_ENERGY);  
+    lifeIndicator = new LifeIndicator((uint8_t)LIVES, (uint8_t)LEFT_MARGIN, (uint8_t)(GROUND+3));
 }
 
 GameController::~GameController() {
@@ -181,10 +183,25 @@ void GameController::executeInLoop() {
       moveTheStars();
       generateAStar();  
     
+       lifeIndicator->redraw();
       break;
-    case LIFE_LOST:
+    case LIFE_LOST: {
+      currentEnergyLevel = START_ENERGY_VALUE;
+      currentGroundings = 0;
+      currentCatches = 0;      
       currentLives -= 1;
-      break;
+      Sprite death(50, 46, Sprite::death, COMPRESSED);
+      uView.clear(PAGE);
+      death.draw(pos_t(32,24));
+      uView.display();
+      delay(2000);
+      uView.clear(PAGE); 
+      
+      lifeIndicator->reduceLife();
+      
+      energyIndicator->setValue(currentEnergyLevel);      
+      energyIndicator->redraw();          
+    } break;
       
     case LEVEL_FINISHED: {
       finishAndStepToNextLevel();  
@@ -199,7 +216,6 @@ void GameController::executeInLoop() {
       uView.clear(PAGE); 
       energyIndicator->setValue(currentEnergyLevel);      
       energyIndicator->redraw();    
-
     } break;
       
     case GAME_OVER:

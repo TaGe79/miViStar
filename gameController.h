@@ -8,6 +8,7 @@
 #include "ledController.h"
 #include "userInputReceiver.h"
 #include "userInputController.h"
+#include "lifeIndicator.h"
 
 #define MAX_STARS_IN_GAME   20
 #define MAX_LEVELS          10
@@ -37,10 +38,14 @@ typedef enum GameStates {
 
 class GameController : public UserInputReceiver {
   private:
-    Componist *componist;
-    LEDController *ledController;
-    EnergyIndicator *energyIndicator;
+    Componist           *componist;
+    LEDController       *ledController;
+    
+    EnergyIndicator     *energyIndicator;
+    LifeIndicator       *lifeIndicator;
+    
     UserInputController *inputController;
+    
 
     uint8_t currentLevel;
     uint8_t currentGroundings;
