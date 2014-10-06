@@ -100,6 +100,10 @@ void Sprite::draw(pos_t pos, uint8_t color) {
 void Sprite::eraseCurrent() {
   draw(pos,BLACK);  
 }
+
+void Sprite::hide() {
+  eraseCurrent();  
+}
  
 void Sprite::draw(pos_t newPos) {
   if ( pos.x != 0 && pos.y != 0 ) eraseCurrent();

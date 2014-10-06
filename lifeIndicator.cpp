@@ -28,8 +28,13 @@ void LifeIndicator::drawFace() {
   offsetY=getY(); 
 
   for ( uint8_t i=0;  i<this->maxLifes; i++ ) {
-    if ( i < this->lifesLeft ) this->lifeSign->draw( pos_t(offsetX+(i*6)+3, offsetY+2) );  
-    else this->deadSign->draw( pos_t(offsetX+(i*6)+3, offsetY+2) );
+    if ( i < this->lifesLeft ) {
+      this->deadSigns[i]->hide();
+      this->lifeSigns[i]->draw( pos_t(offsetX+(i*6)+3, offsetY+3) );  
+    } else {
+      this->lifeSigns[i]->hide();
+      this->deadSigns[i]->draw( pos_t(offsetX+(i*6)+3, offsetY+3) );
+    }
   }
 }
 

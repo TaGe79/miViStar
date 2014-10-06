@@ -36,6 +36,7 @@ public:
   pos_t whereAmI();
   
   void draw(pos_t newPos);
+  void hide();
   bool isColliding(pos_t aPos);
   bool isColliding(Sprite *other);
   

@@ -2,9 +2,11 @@
 #define LIFE_INDICATOR_H
 
 #include <MicroView.h>
+#include <stdlib.h>
+
 #include "sprite.h"
 
-static const uint8_t emptyHeart[] {
+static const uint8_t emptyHeart[] = {
 0x50,
 0xa8,
 0x88,
@@ -12,7 +14,7 @@ static const uint8_t emptyHeart[] {
 0x20
 };
 
-static const uint8_t filledHeart[] {
+static const uint8_t filledHeart[] = {
 0x50,
 0xf8,
 0xf8,
@@ -26,8 +28,8 @@ class LifeIndicator : public MicroViewWidget {
     uint8_t maxLifes;
     uint8_t lifesLeft;
 
-    Sprite *lifeSign;
-    Sprite *deadSign;
+    Sprite **lifeSigns;
+    Sprite **deadSigns;
 
     const uint8_t width;
     const uint8_t height;
@@ -37,16 +39,26 @@ class LifeIndicator : public MicroViewWidget {
       this->maxLifes = maxLifes;
       this->lifesLeft = maxLifes;
       
-      this->deadSign = new Sprite(5,5,emptyHeart,COMPRESSED);
-      this->lifeSign = new Sprite(5,5,filledHeart,COMPRESSED);
+      this->deadSigns = (Sprite**)malloc(maxLifes * sizeof(Sprite*));
+      this->lifeSigns = (Sprite**)malloc(maxLifes * sizeof(Sprite*));
+      
+      for ( int i =0; i<maxLifes; i++ ) {
+        this->lifeSigns[i] = new Sprite(5,5,filledHeart,COMPRESSED);
+        this->deadSigns[i] = new Sprite(5,5,emptyHeart,COMPRESSED);        
+      }
       
       drawFace();
       draw();
     };
     
     ~LifeIndicator() {
-      delete deadSign;
-      delete lifeSign;  
+      for ( int i=0; i< maxLifes; i++ ) {
+        delete deadSigns[i];
+        delete lifeSigns[i];  
+      }
+      
+        delete deadSigns;
+        delete lifeSigns;      
     }
     
     uint8_t reduceLife();
